@@ -1,0 +1,8 @@
+<component-set>
+  <components>
+    <component>
+      <role>org.gitorious.rgladwell.maven.plugin.vala.CommandExecutor</role>
+      <implementation>org.gitorious.rgladwell.maven.plugin.vala.CommandLineExecutor</implementation>
+    </component>
+  </components>
+</component-set>
