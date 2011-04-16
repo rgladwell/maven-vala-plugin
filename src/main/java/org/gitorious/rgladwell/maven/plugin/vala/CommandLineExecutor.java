@@ -40,11 +40,8 @@ public class CommandLineExecutor implements CommandExecutor {
 		arguments.add("-o");
 		arguments.add(compileCommand.getOutputFile().getAbsolutePath());
 
-		if(!compileCommand.getPackages().isEmpty()) {
-			arguments.add("--pkg");
-		}
-
 		for(String p : compileCommand.getPackages()) {
+			arguments.add("--pkg");
 			arguments.add(p);
 		}
 

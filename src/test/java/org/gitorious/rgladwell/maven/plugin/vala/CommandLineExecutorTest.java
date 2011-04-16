@@ -79,4 +79,20 @@ public class CommandLineExecutorTest extends AbstractMojoTestCase {
 		assertTrue("complex executable did not execute correctly", IOUtil.toString(new FileReader(testOutput)).contains("TEST-complex-executable"));
 	}
 
+	@Test
+	public void testExecuteCompileForComplexExecutableProjectWithMultiplePackageDependencies() throws Exception {
+		CompileCommand command = new CompileCommand();
+		command.setCommandName("valac");
+		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/complex-executable/main.vala"));
+		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/complex-executable/src/Test.vala"));
+		command.getPackages().add("glib-2.0");
+		command.getPackages().add("gio-2.0");
+		File complexExecutable = new File(outputDirectory, "complex-executable");
+		command.setOutputFile(complexExecutable);
+
+		executor.execute(command);
+
+		assertTrue("complex executable not built correctly", complexExecutable.exists());
+	}
+
 }
