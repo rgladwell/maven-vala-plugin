@@ -7,9 +7,11 @@ import java.util.Set;
 public class CompileCommand extends Command {
 
 	String commandName;
+	String buildName;
 	Set<File> valaSources = new HashSet<File>();
 	Set<String> packages = new HashSet<String>();
-	File outputFile;
+	File outputFolder;
+	boolean library;
 
 	public String getCommandName() {
 		return commandName;
@@ -18,6 +20,14 @@ public class CompileCommand extends Command {
 	public void setCommandName(String command) {
 		this.commandName = command;
 	}
+
+	public String getBuildName() {
+    	return buildName;
+    }
+
+	public void setBuildName(String buildName) {
+    	this.buildName = buildName;
+    }
 
 	public Set<File> getValaSources() {
 		return valaSources;
@@ -35,27 +45,45 @@ public class CompileCommand extends Command {
     	this.packages = packages;
     }
 
-	public File getOutputFile() {
-    	return outputFile;
+	public File getOutputFolder() {
+    	return outputFolder;
     }
 
-	public void setOutputFile(File outputFile) {
-    	this.outputFile = outputFile;
+	public void setOutputFolder(File outputFolder) {
+    	this.outputFolder = outputFolder;
+    }
+
+	public boolean isLibrary() {
+    	return library;
+    }
+
+	public void setLibrary(boolean library) {
+    	this.library = library;
     }
 
 	@Override
     public String toString() {
-	    return "CompileCommand [commandName=" + commandName + ", valaSources=" + valaSources + ", packages=" + packages + ", outputFile=" + outputFile + "]";
+	    return "CompileCommand [commandName=" + commandName + ", buildName="
+	            + buildName + ", valaSources=" + valaSources + ", packages="
+	            + packages + ", outputFolder=" + outputFolder + ", library="
+	            + library + "]";
     }
 
 	@Override
     public int hashCode() {
 	    final int prime = 31;
 	    int result = 1;
-	    result = prime * result + ((commandName == null) ? 0 : commandName.hashCode());
-	    result = prime * result + ((outputFile == null) ? 0 : outputFile.hashCode());
-	    result = prime * result + ((packages == null) ? 0 : packages.hashCode());
-	    result = prime * result + ((valaSources == null) ? 0 : valaSources.hashCode());
+	    result = prime * result
+	            + ((buildName == null) ? 0 : buildName.hashCode());
+	    result = prime * result
+	            + ((commandName == null) ? 0 : commandName.hashCode());
+	    result = prime * result + (library ? 1231 : 1237);
+	    result = prime * result
+	            + ((outputFolder == null) ? 0 : outputFolder.hashCode());
+	    result = prime * result
+	            + ((packages == null) ? 0 : packages.hashCode());
+	    result = prime * result
+	            + ((valaSources == null) ? 0 : valaSources.hashCode());
 	    return result;
     }
 
@@ -68,15 +96,22 @@ public class CompileCommand extends Command {
 	    if (getClass() != obj.getClass())
 		    return false;
 	    CompileCommand other = (CompileCommand) obj;
+	    if (buildName == null) {
+		    if (other.buildName != null)
+			    return false;
+	    } else if (!buildName.equals(other.buildName))
+		    return false;
 	    if (commandName == null) {
 		    if (other.commandName != null)
 			    return false;
 	    } else if (!commandName.equals(other.commandName))
 		    return false;
-	    if (outputFile == null) {
-		    if (other.outputFile != null)
+	    if (library != other.library)
+		    return false;
+	    if (outputFolder == null) {
+		    if (other.outputFolder != null)
 			    return false;
-	    } else if (!outputFile.equals(other.outputFile))
+	    } else if (!outputFolder.equals(other.outputFolder))
 		    return false;
 	    if (packages == null) {
 		    if (other.packages != null)

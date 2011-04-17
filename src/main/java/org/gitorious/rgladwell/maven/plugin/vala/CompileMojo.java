@@ -80,6 +80,11 @@ public class CompileMojo extends AbstractMojo {
     	validate();
 
     	CompileCommand command = new CompileCommand();
+    	command.setBuildName(outputExecutableName);
+
+    	if("vala-library".equals(project.getPackaging())) {
+    		command.setLibrary(true);
+    	}
 
     	command.setCommandName(compilerName);
 
@@ -97,7 +102,7 @@ public class CompileMojo extends AbstractMojo {
     		command.getValaSources().add(new File(sourceDirectory, file));
     	}
 
-    	command.setOutputFile(new File(outputDirectory, outputExecutableName));
+    	command.setOutputFolder(outputDirectory);
 
     	if(!outputDirectory.exists()) {
     		outputDirectory.mkdirs();

@@ -34,11 +34,19 @@ public class CommandLineExecutor implements CommandExecutor {
 		CompileCommand compileCommand = (CompileCommand) command;
 		List<String> arguments = new ArrayList<String>();		
 		Commandline cmd = new Commandline();
+		cmd.setWorkingDirectory(compileCommand.getOutputFolder());
 		
 		cmd.setExecutable(compileCommand.getCommandName());
 		
-		arguments.add("-o");
-		arguments.add(compileCommand.getOutputFile().getAbsolutePath());
+		if(compileCommand.isLibrary()) {
+			arguments.add("-c");
+			arguments.add("--library="+compileCommand.getBuildName());
+			arguments.add("-d");
+			arguments.add(compileCommand.getOutputFolder().getAbsolutePath()+"/");
+		} else {
+			arguments.add("-o");
+			arguments.add(compileCommand.getOutputFolder().getAbsolutePath()+"/"+compileCommand.getBuildName());
+		}
 
 		for(String p : compileCommand.getPackages()) {
 			arguments.add("--pkg");

@@ -47,9 +47,10 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 
 		CompileCommand command = new CompileCommand();
 		command.setCommandName("valac");
+		command.setBuildName("simple-executable");
 		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/simple-executable/main.vala"));
 		command.getPackages().add("glib-2.0");
-		command.setOutputFile(new File(getBasedir(), "src/test/resources/projects/simple-executable/target/simple-executable"));
+		command.setOutputFolder(new File(getBasedir(), "src/test/resources/projects/simple-executable/target"));
 		verify(commandExecutor).execute(command);
 	}
 
@@ -77,12 +78,41 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 
 		CompileCommand command = new CompileCommand();
 		command.setCommandName("valac");
+		command.setBuildName("complex-executable");
 		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/complex-executable/src/Test.vala"));
 		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/complex-executable/main.vala"));
 		command.getPackages().add("glib-2.0");
 		command.getPackages().add("gio-2.0");
-		command.setOutputFile(new File(getBasedir(), "src/test/resources/projects/complex-executable/target/complex-executable"));
+		command.setOutputFolder(new File(getBasedir(), "src/test/resources/projects/complex-executable/target"));
 		verify(commandExecutor).execute(command);
 	}
 
+    @Test
+	@SuppressWarnings("unchecked")
+	public void testExecuteForSimpleLibrary() throws Throwable {
+		File pom = new File(getBasedir(), "src/test/resources/projects/simple-library/pom.xml");
+		CompileMojo mojo = (CompileMojo) lookupMojo ( "valac", pom );
+		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
+		setVariableValueToObject(mojo, "compilerName", "valac");
+		MavenProjectStub project = new MavenProjectStub();
+		project.setPackaging("vala-library");
+		Artifact artifact = new ArtifactStub();
+		artifact.setArtifactId("glib");
+		artifact.setVersion("2.0");
+		project.setDependencyArtifacts(new HashSet<Artifact>());
+		project.getDependencyArtifacts().add(artifact);
+		setVariableValueToObject(mojo, "project", project);
+		setVariableValueToObject(mojo, "outputExecutableName", "simple-library");
+
+		mojo.execute();
+
+		CompileCommand command = new CompileCommand();
+		command.setCommandName("valac");
+		command.setBuildName("simple-library");
+		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/simple-library/main.vala"));
+		command.getPackages().add("glib-2.0");
+		command.setOutputFolder(new File(getBasedir(), "src/test/resources/projects/simple-library/target"));
+		command.setLibrary(true);
+		verify(commandExecutor).execute(command);
+	}
 }

@@ -42,7 +42,8 @@ public class CommandLineExecutorTest extends AbstractMojoTestCase {
 		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/simple-executable/main.vala"));
 		command.getPackages().add("glib-2.0");
 		File simpleExecutable = new File(outputDirectory, "simple-executable");
-		command.setOutputFile(simpleExecutable);
+		command.setOutputFolder(outputDirectory);
+		command.setBuildName("simple-executable");
 
 		executor.execute(command);
 
@@ -65,7 +66,8 @@ public class CommandLineExecutorTest extends AbstractMojoTestCase {
 		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/complex-executable/src/Test.vala"));
 		command.getPackages().add("gio-2.0");
 		File complexExecutable = new File(outputDirectory, "complex-executable");
-		command.setOutputFile(complexExecutable);
+		command.setOutputFolder(outputDirectory);
+		command.setBuildName("complex-executable");
 
 		executor.execute(command);
 
@@ -88,11 +90,28 @@ public class CommandLineExecutorTest extends AbstractMojoTestCase {
 		command.getPackages().add("glib-2.0");
 		command.getPackages().add("gio-2.0");
 		File complexExecutable = new File(outputDirectory, "complex-executable");
-		command.setOutputFile(complexExecutable);
+		command.setOutputFolder(outputDirectory);
+		command.setBuildName("complex-executable");
 
 		executor.execute(command);
 
 		assertTrue("complex executable not built correctly", complexExecutable.exists());
+	}
+
+	@Test
+	public void testExecuteCompileForSimpleLibraryProject() throws Exception {
+		CompileCommand command = new CompileCommand();
+		command.setCommandName("valac");
+		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/simple-library/main.vala"));
+		command.getPackages().add("glib-2.0");
+		command.setLibrary(true);
+		File simpleExecutable = new File(outputDirectory, "simple-library");
+		command.setOutputFolder(outputDirectory);
+		command.setBuildName("simple-library");
+
+		executor.execute(command);
+
+		assertTrue("simple executable not built correctly", simpleExecutable.exists());
 	}
 
 }
