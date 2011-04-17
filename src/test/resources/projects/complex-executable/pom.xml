@@ -3,7 +3,7 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-vala-plugin</artifactId>
+        <artifactId>vala-maven-plugin</artifactId>
         <configuration>
           <outputDirectory>${basedir}/src/test/resources/projects/complex-executable/target</outputDirectory>
           <sourceDirectory>${basedir}/src/test/resources/projects/complex-executable</sourceDirectory>
