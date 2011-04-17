@@ -31,7 +31,7 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 	@SuppressWarnings("unchecked")
 	public void testExecuteForSimpleExecutable() throws Throwable {
 		File pom = new File(getBasedir(), "src/test/resources/projects/simple-executable/pom.xml");
-		CompileMojo mojo = (CompileMojo) lookupMojo ( "vala-compile", pom );
+		CompileMojo mojo = (CompileMojo) lookupMojo ( "valac", pom );
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
 		setVariableValueToObject(mojo, "compilerName", "valac");
 		MavenProjectStub project = new MavenProjectStub();
@@ -57,7 +57,7 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 	@SuppressWarnings("unchecked")
 	public void testExecuteForComplexExecutable() throws Throwable {
 		File pom = new File(getBasedir(), "src/test/resources/projects/complex-executable/pom.xml");
-		CompileMojo mojo = (CompileMojo) lookupMojo ( "vala-compile", pom );
+		CompileMojo mojo = (CompileMojo) lookupMojo ( "valac", pom );
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
 		setVariableValueToObject(mojo, "compilerName", "valac");
 		MavenProjectStub project = new MavenProjectStub();

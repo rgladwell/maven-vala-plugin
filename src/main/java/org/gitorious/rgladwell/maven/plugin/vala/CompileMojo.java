@@ -27,8 +27,7 @@ import java.io.File;
 /**
  * Goal which touches a timestamp file.
  *
- * @goal vala-compile
- * @phase compile
+ * @goal valac
  */
 public class CompileMojo extends AbstractMojo {
 

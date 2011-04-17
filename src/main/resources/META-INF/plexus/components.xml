@@ -1,8 +1,28 @@
 <component-set>
-  <components>
-    <component>
-      <role>org.gitorious.rgladwell.maven.plugin.vala.CommandExecutor</role>
-      <implementation>org.gitorious.rgladwell.maven.plugin.vala.CommandLineExecutor</implementation>
-    </component>
-  </components>
+	<components>
+		<component>
+			<role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+			<role-hint>vala-executable</role-hint>
+			<implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
+			<configuration>
+				<phases>
+					<compile>org.codehaus.mojo:vala-maven-plugin:valac</compile>
+				</phases>
+			</configuration>
+		</component>
+		<component>
+			<role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+			<role-hint>vala-library</role-hint>
+			<implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
+			<configuration>
+				<phases>
+					<compile>org.codehaus.mojo:vala-maven-plugin:valac</compile>
+				</phases>
+			</configuration>
+		</component>
+		<component>
+			<role>org.gitorious.rgladwell.maven.plugin.vala.CommandExecutor</role>
+			<implementation>org.gitorious.rgladwell.maven.plugin.vala.CommandLineExecutor</implementation>
+		</component>
+	</components>
 </component-set>
