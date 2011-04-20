@@ -58,7 +58,7 @@ public class CompileMojo extends AbstractMojo {
     /**
      * Name of the executable output binary.
      * 
-     * @parameter expression="${project.artifactId}"
+     * @parameter expression="${project.artifactId}-${project.version}"
      * @required
      */
     private String outputExecutableName;
