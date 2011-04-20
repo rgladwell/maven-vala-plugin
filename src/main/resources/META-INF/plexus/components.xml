@@ -17,6 +17,7 @@
 			<configuration>
 				<phases>
 					<compile>org.codehaus.mojo:vala-maven-plugin:valac</compile>
+					<install>org.apache.maven.plugins:maven-install-plugin:install</install>
 				</phases>
 			</configuration>
 		</component>

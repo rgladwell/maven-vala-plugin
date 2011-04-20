@@ -20,6 +20,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectHelper;
 import org.codehaus.plexus.util.DirectoryScanner;
 
 import java.io.File;
@@ -75,8 +76,13 @@ public class CompileMojo extends AbstractMojo {
      * @component role="org.gitorious.rgladwell.maven.plugin.vala.CommandExecutor"
      */
     private CommandExecutor commandExecutor;
-
-    public void execute() throws MojoExecutionException {
+    
+    /**
+     * @component
+  	 */
+  	private MavenProjectHelper projectHelper;
+ 
+  	public void execute() throws MojoExecutionException {
     	validate();
 
     	CompileCommand command = new CompileCommand();
@@ -113,6 +119,18 @@ public class CompileMojo extends AbstractMojo {
 		} catch (ValaPluginException e) {
 			throw new MojoExecutionException("error during vala compilation", e);
 		}
+
+		File artifactFile = null;
+
+    	if("vala-library".equals(project.getPackaging())) {
+    		artifactFile = new File(outputDirectory, outputExecutableName+".so");
+    		projectHelper.attachArtifact(project, "so", artifactFile);
+    		artifactFile = new File(outputDirectory, outputExecutableName+".vapi");
+    		projectHelper.attachArtifact(project, "vapi", artifactFile);
+    	} else {
+    		artifactFile = new File(outputDirectory, outputExecutableName);
+    		projectHelper.attachArtifact(project, "exe", artifactFile);
+    	}    
     }
 
 	private void validate() throws MojoExecutionException {

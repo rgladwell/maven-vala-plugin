@@ -9,6 +9,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.apache.maven.plugin.testing.stubs.ArtifactStub;
 import org.apache.maven.plugin.testing.stubs.MavenProjectStub;
+import org.apache.maven.project.MavenProjectHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 
 	CompileMojo mojo;
 	@Mock CommandExecutor commandExecutor;
+	@Mock MavenProjectHelper projectHelper;
 
 	@Before
 	public void setUp() throws Exception {
@@ -42,6 +44,7 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 		project.getDependencyArtifacts().add(artifact);
 		setVariableValueToObject(mojo, "project", project);
 		setVariableValueToObject(mojo, "outputExecutableName", "simple-executable");
+		setVariableValueToObject(mojo, "projectHelper", projectHelper);
 
 		mojo.execute();
 
@@ -73,6 +76,7 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 		project.getDependencyArtifacts().add(artifact2);
 		setVariableValueToObject(mojo, "project", project);
 		setVariableValueToObject(mojo, "outputExecutableName", "complex-executable");
+		setVariableValueToObject(mojo, "projectHelper", projectHelper);
 
 		mojo.execute();
 
@@ -85,6 +89,7 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 		command.getPackages().add("gio-2.0");
 		command.setOutputFolder(new File(getBasedir(), "src/test/resources/projects/complex-executable/target"));
 		verify(commandExecutor).execute(command);
+		verify(projectHelper).attachArtifact(project, "exe", new File(command.getOutputFolder(), "complex-executable"));
 	}
 
     @Test
@@ -103,6 +108,7 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 		project.getDependencyArtifacts().add(artifact);
 		setVariableValueToObject(mojo, "project", project);
 		setVariableValueToObject(mojo, "outputExecutableName", "simple-library");
+		setVariableValueToObject(mojo, "projectHelper", projectHelper);
 
 		mojo.execute();
 
@@ -114,5 +120,7 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 		command.setOutputFolder(new File(getBasedir(), "src/test/resources/projects/simple-library/target"));
 		command.setLibrary(true);
 		verify(commandExecutor).execute(command);
+		verify(projectHelper).attachArtifact(project, "so", new File(command.getOutputFolder(), "simple-library.so"));
+		verify(projectHelper).attachArtifact(project, "vapi", new File(command.getOutputFolder(), "simple-library.vapi"));
 	}
 }
