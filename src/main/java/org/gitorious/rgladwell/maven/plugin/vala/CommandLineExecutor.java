@@ -22,8 +22,7 @@ public class CommandLineExecutor implements CommandExecutor {
     }
 
     public Log getLog() {
-        if ( log == null )
-        {
+        if ( log == null ) {
             log = new SystemStreamLog();
         }
 
