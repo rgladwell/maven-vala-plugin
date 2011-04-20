@@ -105,13 +105,13 @@ public class CommandLineExecutorTest extends AbstractMojoTestCase {
 		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/simple-library/main.vala"));
 		command.getPackages().add("glib-2.0");
 		command.setLibrary(true);
-		File simpleExecutable = new File(outputDirectory, "simple-library");
+		File simpleLibrary = new File(outputDirectory, "simple-library.so");
 		command.setOutputFolder(outputDirectory);
 		command.setBuildName("simple-library");
 
 		executor.execute(command);
 
-		assertTrue("simple executable not built correctly", simpleExecutable.exists());
+		assertTrue("simple executable not built correctly", simpleLibrary.exists());
 	}
 
 }

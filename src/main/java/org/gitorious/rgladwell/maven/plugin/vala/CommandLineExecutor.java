@@ -39,10 +39,13 @@ public class CommandLineExecutor implements CommandExecutor {
 		cmd.setExecutable(compileCommand.getCommandName());
 		
 		if(compileCommand.isLibrary()) {
-			arguments.add("-c");
 			arguments.add("--library="+compileCommand.getBuildName());
-			arguments.add("-d");
-			arguments.add(compileCommand.getOutputFolder().getAbsolutePath()+"/");
+			arguments.add("-X");
+			arguments.add("-fPIC");
+			arguments.add("-X");
+			arguments.add("-shared");
+			arguments.add("-o");
+			arguments.add(compileCommand.getOutputFolder().getAbsolutePath()+"/"+compileCommand.getBuildName()+".so");
 		} else {
 			arguments.add("-o");
 			arguments.add(compileCommand.getOutputFolder().getAbsolutePath()+"/"+compileCommand.getBuildName());
