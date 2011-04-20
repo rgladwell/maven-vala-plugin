@@ -34,9 +34,9 @@ public class CommandLineExecutor implements CommandExecutor {
 		List<String> arguments = new ArrayList<String>();		
 		Commandline cmd = new Commandline();
 		cmd.setWorkingDirectory(compileCommand.getOutputFolder());
-		
+
 		cmd.setExecutable(compileCommand.getCommandName());
-		
+
 		if(compileCommand.isLibrary()) {
 			arguments.add("--library="+compileCommand.getBuildName());
 			arguments.add("-X");
@@ -58,7 +58,7 @@ public class CommandLineExecutor implements CommandExecutor {
 		for(File source : compileCommand.getValaSources()) {
 			arguments.add(source.getAbsolutePath());
 		}
-		
+
 		cmd.addArguments(arguments.toArray(new String[arguments.size()]));
 
 		StringWriter outputWriter = new StringWriter();
