@@ -17,23 +17,23 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CompileMojoTest extends AbstractMojoTestCase {
+public class CompileExecutableMojoTest extends AbstractMojoTestCase {
 
-	CompileMojo mojo;
+	CompileExecutableMojo mojo;
 	@Mock CommandExecutor commandExecutor;
 	@Mock MavenProjectHelper projectHelper;
 
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		mojo = new CompileMojo();
+		mojo = new CompileExecutableMojo();
 	}
 
     @Test
 	@SuppressWarnings("unchecked")
 	public void testExecuteForSimpleExecutable() throws Throwable {
 		File pom = new File(getBasedir(), "src/test/resources/projects/simple-executable/pom.xml");
-		CompileMojo mojo = (CompileMojo) lookupMojo ( "valac", pom );
+		CompileExecutableMojo mojo = (CompileExecutableMojo) lookupMojo ( "valac-executable", pom );
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
 		setVariableValueToObject(mojo, "compilerName", "valac");
 		MavenProjectStub project = new MavenProjectStub();
@@ -61,7 +61,7 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 	@SuppressWarnings("unchecked")
 	public void testExecuteForComplexExecutable() throws Throwable {
 		File pom = new File(getBasedir(), "src/test/resources/projects/complex-executable/pom.xml");
-		CompileMojo mojo = (CompileMojo) lookupMojo ( "valac", pom );
+		CompileExecutableMojo mojo = (CompileExecutableMojo) lookupMojo ( "valac-executable", pom );
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
 		setVariableValueToObject(mojo, "compilerName", "valac");
 		MavenProjectStub project = new MavenProjectStub();
@@ -92,35 +92,4 @@ public class CompileMojoTest extends AbstractMojoTestCase {
 		verify(projectHelper).attachArtifact(project, "exe", new File(command.getOutputFolder(), "complex-executable"));
 	}
 
-    @Test
-	@SuppressWarnings("unchecked")
-	public void testExecuteForSimpleLibrary() throws Throwable {
-		File pom = new File(getBasedir(), "src/test/resources/projects/simple-library/pom.xml");
-		CompileMojo mojo = (CompileMojo) lookupMojo ( "valac", pom );
-		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
-		setVariableValueToObject(mojo, "compilerName", "valac");
-		MavenProjectStub project = new MavenProjectStub();
-		project.setPackaging("vala-library");
-		Artifact artifact = new ArtifactStub();
-		artifact.setArtifactId("glib");
-		artifact.setVersion("2.0");
-		project.setDependencyArtifacts(new HashSet<Artifact>());
-		project.getDependencyArtifacts().add(artifact);
-		setVariableValueToObject(mojo, "project", project);
-		setVariableValueToObject(mojo, "outputExecutableName", "simple-library");
-		setVariableValueToObject(mojo, "projectHelper", projectHelper);
-
-		mojo.execute();
-
-		CompileCommand command = new CompileCommand();
-		command.setCommandName("valac");
-		command.setBuildName("simple-library");
-		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/simple-library/main.vala"));
-		command.getPackages().add("glib-2.0");
-		command.setOutputFolder(new File(getBasedir(), "src/test/resources/projects/simple-library/target"));
-		command.setLibrary(true);
-		verify(commandExecutor).execute(command);
-		verify(projectHelper).attachArtifact(project, "so", new File(command.getOutputFolder(), "simple-library.so"));
-		verify(projectHelper).attachArtifact(project, "vapi", new File(command.getOutputFolder(), "simple-library.vapi"));
-	}
 }
