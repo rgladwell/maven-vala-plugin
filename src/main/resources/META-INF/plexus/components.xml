@@ -6,7 +6,8 @@
 			<implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
 			<configuration>
 				<phases>
-					<compile>org.codehaus.mojo:vala-maven-plugin:valac</compile>
+					<compile>org.codehaus.mojo:vala-maven-plugin:valac-executable</compile>
+					<install>org.apache.maven.plugins:maven-install-plugin:install</install>
 				</phases>
 			</configuration>
 		</component>
@@ -16,7 +17,7 @@
 			<implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
 			<configuration>
 				<phases>
-					<compile>org.codehaus.mojo:vala-maven-plugin:valac</compile>
+					<compile>org.codehaus.mojo:vala-maven-plugin:valac-library</compile>
 					<install>org.apache.maven.plugins:maven-install-plugin:install</install>
 				</phases>
 			</configuration>
