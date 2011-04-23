@@ -114,4 +114,28 @@ public class CommandLineExecutorTest extends AbstractMojoTestCase {
 		assertTrue("simple executable not built correctly", simpleLibrary.exists());
 	}
 
+	@Test
+	public void testExecuteCompileForDebugMode() throws Exception {
+		CompileCommand command = new CompileCommand();
+		command.setCommandName("valac");
+		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/simple-executable/main.vala"));
+		command.getPackages().add("glib-2.0");
+		File simpleExecutable = new File(outputDirectory, "simple-executable");
+		command.setOutputFolder(outputDirectory);
+		command.setBuildName("simple-executable");
+		command.setDebug(true);
+
+		executor.execute(command);
+
+		assertTrue("simple executable not built correctly", simpleExecutable.exists());
+		Commandline cmd = new Commandline();
+		cmd.setExecutable(simpleExecutable.getAbsolutePath());
+		StringWriter outputWriter = new StringWriter();
+		StringWriter errorWriter = new StringWriter();
+		StreamConsumer output = new WriterStreamConsumer(outputWriter);
+		StreamConsumer error = new WriterStreamConsumer(errorWriter);
+		assertEquals("simple executable not built correctly", 0, CommandLineUtils.executeCommandLine(cmd, output, error));
+		assertTrue(outputWriter.toString().contains("TEST-simple-executable"));
+	}
+
 }

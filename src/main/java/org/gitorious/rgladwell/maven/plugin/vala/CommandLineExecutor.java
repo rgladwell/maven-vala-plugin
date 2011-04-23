@@ -55,6 +55,10 @@ public class CommandLineExecutor implements CommandExecutor {
 			arguments.add(p);
 		}
 
+		if(compileCommand.isDebug()) {
+			arguments.add("--save-temps");
+		}
+
 		for(File source : compileCommand.getValaSources()) {
 			arguments.add(source.getAbsolutePath());
 		}

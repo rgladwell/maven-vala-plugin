@@ -12,6 +12,7 @@ public class CompileCommand extends Command {
 	Set<String> packages = new HashSet<String>();
 	File outputFolder;
 	boolean library;
+	boolean debug;
 
 	public String getCommandName() {
 		return commandName;
@@ -61,12 +62,20 @@ public class CompileCommand extends Command {
     	this.library = library;
     }
 
+	public boolean isDebug() {
+    	return debug;
+    }
+
+	public void setDebug(boolean debug) {
+    	this.debug = debug;
+    }
+
 	@Override
     public String toString() {
 	    return "CompileCommand [commandName=" + commandName + ", buildName="
 	            + buildName + ", valaSources=" + valaSources + ", packages="
 	            + packages + ", outputFolder=" + outputFolder + ", library="
-	            + library + "]";
+	            + library + ", debug=" + debug + "]";
     }
 
 	@Override
@@ -77,6 +86,7 @@ public class CompileCommand extends Command {
 	            + ((buildName == null) ? 0 : buildName.hashCode());
 	    result = prime * result
 	            + ((commandName == null) ? 0 : commandName.hashCode());
+	    result = prime * result + (debug ? 1231 : 1237);
 	    result = prime * result + (library ? 1231 : 1237);
 	    result = prime * result
 	            + ((outputFolder == null) ? 0 : outputFolder.hashCode());
@@ -105,6 +115,8 @@ public class CompileCommand extends Command {
 		    if (other.commandName != null)
 			    return false;
 	    } else if (!commandName.equals(other.commandName))
+		    return false;
+	    if (debug != other.debug)
 		    return false;
 	    if (library != other.library)
 		    return false;

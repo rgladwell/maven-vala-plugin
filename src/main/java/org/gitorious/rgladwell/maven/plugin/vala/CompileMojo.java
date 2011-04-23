@@ -64,6 +64,11 @@ public abstract class CompileMojo extends AbstractMojo {
  
 	protected CompileCommand command = new CompileCommand();
 
+	/**
+	 * @parameter default-value="false";
+	 */
+	private boolean debug = false;
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		validate();
 
@@ -81,11 +86,19 @@ public abstract class CompileMojo extends AbstractMojo {
     		command.getValaSources().add(new File(sourceDirectory, file));
     	}
 
-    	for(Artifact artifact : project.getDependencyArtifacts()) {
-    		command.getPackages().add(artifact.getArtifactId() + "-" + artifact.getVersion());
+    	if(project.getDependencyArtifacts() != null) {
+	    	for(Artifact artifact : project.getDependencyArtifacts()) {
+	    		command.getPackages().add(artifact.getArtifactId() + "-" + artifact.getVersion());
+	    	}
     	}
 
     	command.setOutputFolder(outputDirectory);
+    	
+    	if(debug) {
+    		getLog().info("compiling with debug info");
+    	}
+
+    	command.setDebug(debug);
 
     	if(!outputDirectory.exists()) {
     		outputDirectory.mkdirs();

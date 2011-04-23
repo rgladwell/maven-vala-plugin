@@ -92,4 +92,27 @@ public class CompileExecutableMojoTest extends AbstractMojoTestCase {
 		verify(projectHelper).attachArtifact(project, "exe", new File(command.getOutputFolder(), "complex-executable"));
 	}
 
+    @Test
+	@SuppressWarnings("unchecked")
+	public void testExecuteForSimpleExecutableWithDebug() throws Throwable {
+		File pom = new File(getBasedir(), "src/test/resources/projects/simple-executable/pom.xml");
+		CompileExecutableMojo mojo = (CompileExecutableMojo) lookupMojo ( "valac-executable", pom );
+		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
+		setVariableValueToObject(mojo, "compilerName", "valac");
+		MavenProjectStub project = new MavenProjectStub();
+		setVariableValueToObject(mojo, "project", project);
+		setVariableValueToObject(mojo, "outputExecutableName", "simple-executable");
+		setVariableValueToObject(mojo, "projectHelper", projectHelper);
+		setVariableValueToObject(mojo, "debug", true);
+
+		mojo.execute();
+
+		CompileCommand command = new CompileCommand();
+		command.setCommandName("valac");
+		command.setBuildName("simple-executable");
+		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/simple-executable/main.vala"));
+		command.setOutputFolder(new File(getBasedir(), "src/test/resources/projects/simple-executable/target"));
+		command.setDebug(true);
+		verify(commandExecutor).execute(command);
+	}
 }
