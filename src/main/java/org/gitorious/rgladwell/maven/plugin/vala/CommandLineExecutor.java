@@ -56,6 +56,7 @@ public class CommandLineExecutor implements CommandExecutor {
 		}
 
 		if(compileCommand.isDebug()) {
+			arguments.add("-g");
 			arguments.add("--save-temps");
 		}
 
