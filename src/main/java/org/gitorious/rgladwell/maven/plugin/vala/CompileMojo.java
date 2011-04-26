@@ -3,24 +3,14 @@ package org.gitorious.rgladwell.maven.plugin.vala;
 import java.io.File;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.gitorious.rgladwell.maven.plugin.vala.model.CompileCommand;
 import org.gitorious.rgladwell.maven.plugin.vala.model.Library;
 
-public abstract class CompileMojo extends AbstractMojo {
-
-    /**
-     * Project object model.
-     *
-     * @parameter expression="${project}"
-     * @required
-     */
-	protected MavenProject project;
+public abstract class CompileMojo extends ValaMojo {
 
     /**
      * Location of the source directory for vala source files.
@@ -29,14 +19,6 @@ public abstract class CompileMojo extends AbstractMojo {
      * @required
      */
 	protected File sourceDirectory;
-
-	/**
-     * Location of the output directory for vala compiled binaries.
-     * 
-     * @parameter expression="${project.build.directory}/vala"
-     * @required
-     */
-	protected File outputDirectory;
 
     /**
      * Name of the executable output binary.
@@ -70,11 +52,6 @@ public abstract class CompileMojo extends AbstractMojo {
 	 * @parameter default-value="false";
 	 */
 	private boolean debug = false;
-	
-	/**
-	 * @parameter expression="${user.home}"
-	 */
-	private String userHome;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		validate();
