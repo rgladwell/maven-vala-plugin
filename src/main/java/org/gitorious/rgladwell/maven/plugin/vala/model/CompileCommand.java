@@ -1,8 +1,9 @@
-package org.gitorious.rgladwell.maven.plugin.vala;
+package org.gitorious.rgladwell.maven.plugin.vala.model;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+
 
 public class CompileCommand extends Command {
 
@@ -13,7 +14,7 @@ public class CompileCommand extends Command {
 	File outputFolder;
 	boolean library;
 	boolean debug;
-	Set<File> libraries = new HashSet<File>();
+	Set<Library> libraries = new HashSet<Library>();
 
 	public String getCommandName() {
 		return commandName;
@@ -71,11 +72,11 @@ public class CompileCommand extends Command {
     	this.debug = debug;
     }
 
-	public Set<File> getLibraries() {
+	public Set<Library> getLibraries() {
     	return libraries;
     }
 
-	public void setLibraries(Set<File> libraries) {
+	public void setLibraries(Set<Library> libraries) {
     	this.libraries = libraries;
     }
 

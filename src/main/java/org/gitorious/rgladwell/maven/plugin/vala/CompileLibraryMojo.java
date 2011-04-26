@@ -21,6 +21,8 @@ public class CompileLibraryMojo extends CompileMojo {
 		projectHelper.attachArtifact(project, "so", artifactFile);
 		artifactFile = new File(outputDirectory, outputExecutableName+".vapi");
 		projectHelper.attachArtifact(project, "vapi", artifactFile);
+		artifactFile = new File(outputDirectory, outputExecutableName+".h");
+		projectHelper.attachArtifact(project, "h", artifactFile);
 	}
 
 }

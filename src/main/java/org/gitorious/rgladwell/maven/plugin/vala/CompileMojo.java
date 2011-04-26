@@ -9,6 +9,8 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.gitorious.rgladwell.maven.plugin.vala.model.CompileCommand;
+import org.gitorious.rgladwell.maven.plugin.vala.model.Library;
 
 public abstract class CompileMojo extends AbstractMojo {
 
@@ -100,7 +102,11 @@ public abstract class CompileMojo extends AbstractMojo {
 	    			for(String label : artifact.getGroupId().split("\\.")) {
 	    				groupDirectory += label + "/";
 	    			}
-	    			command.getLibraries().add(new File(userHome+"/.m2/repository/" + groupDirectory + artifact.getArtifactId() + "/" + artifact.getVersion() + "/" + artifact.getArtifactId() + "-" + artifact.getVersion() + ".so"));
+	    			Library library = new Library();
+	    			String basefolder = userHome+"/.m2/repository/" + groupDirectory + artifact.getArtifactId() + "/" + artifact.getVersion() + "/";
+	    			library.setBinary(new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".so"));
+	    			library.setVapi(new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".vapi"));
+	    			command.getLibraries().add(library);
 	    		}
 	    	}
     	}

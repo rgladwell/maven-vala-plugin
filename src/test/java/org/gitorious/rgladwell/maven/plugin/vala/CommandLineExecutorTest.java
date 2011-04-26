@@ -10,6 +10,8 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
 import org.codehaus.plexus.util.cli.WriterStreamConsumer;
+import org.gitorious.rgladwell.maven.plugin.vala.model.CompileCommand;
+import org.gitorious.rgladwell.maven.plugin.vala.model.Library;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -112,6 +114,10 @@ public class CommandLineExecutorTest extends AbstractMojoTestCase {
 		executor.execute(command);
 
 		assertTrue("simple executable not built correctly", simpleLibrary.exists());
+		File header = new File(outputDirectory, "simple-library.h");
+		assertTrue("simple executable header not built correctly", header.exists());
+		File vapi = new File(outputDirectory, "simple-library.vapi");
+		assertTrue("simple executable vapi not built correctly", vapi.exists());
 	}
 
 	@Test
@@ -157,8 +163,11 @@ public class CommandLineExecutorTest extends AbstractMojoTestCase {
 		command.getPackages().add("glib-2.0");
 		File simpleExecutable = new File(outputDirectory, "executable-with-library");
 		command.setOutputFolder(outputDirectory);
-		command.setBuildName("simple-executable");
-		command.getLibraries().add(simpleLibrary);
+		command.setBuildName("executable-with-library");
+		Library library = new Library();
+		library.setBinary(simpleLibrary);
+		library.setVapi(new File(outputDirectory, "simple-library.vapi"));
+		command.getLibraries().add(library);
 		command.setDebug(true);
 
 		executor.execute(command);

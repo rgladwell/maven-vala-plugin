@@ -10,6 +10,7 @@ import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.apache.maven.plugin.testing.stubs.ArtifactStub;
 import org.apache.maven.plugin.testing.stubs.MavenProjectStub;
 import org.apache.maven.project.MavenProjectHelper;
+import org.gitorious.rgladwell.maven.plugin.vala.model.CompileCommand;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +60,7 @@ public class CompileLibraryMojoTest extends AbstractMojoTestCase {
 		verify(commandExecutor).execute(command);
 		verify(projectHelper).attachArtifact(project, "so", new File(command.getOutputFolder(), "simple-library.so"));
 		verify(projectHelper).attachArtifact(project, "vapi", new File(command.getOutputFolder(), "simple-library.vapi"));
+		verify(projectHelper).attachArtifact(project, "h", new File(command.getOutputFolder(), "simple-library.h"));
 	}
 
 }

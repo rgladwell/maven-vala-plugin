@@ -12,6 +12,9 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
 import org.codehaus.plexus.util.cli.WriterStreamConsumer;
+import org.gitorious.rgladwell.maven.plugin.vala.model.Command;
+import org.gitorious.rgladwell.maven.plugin.vala.model.CompileCommand;
+import org.gitorious.rgladwell.maven.plugin.vala.model.Library;
 
 public class CommandLineExecutor implements CommandExecutor {
 
@@ -45,9 +48,14 @@ public class CommandLineExecutor implements CommandExecutor {
 			arguments.add("-shared");
 			arguments.add("-o");
 			arguments.add(compileCommand.getOutputFolder().getAbsolutePath()+"/"+compileCommand.getBuildName()+".so");
+			arguments.add("-H");
+			arguments.add(compileCommand.getOutputFolder().getAbsolutePath()+"/"+compileCommand.getBuildName()+".h");
+			arguments.add("--use-header");
 		} else {
 			arguments.add("-o");
 			arguments.add(compileCommand.getOutputFolder().getAbsolutePath()+"/"+compileCommand.getBuildName());
+			arguments.add("-X");
+			arguments.add("-I" + compileCommand.getOutputFolder());
 		}
 
 		for(String p : compileCommand.getPackages()) {
@@ -55,12 +63,11 @@ public class CommandLineExecutor implements CommandExecutor {
 			arguments.add(p);
 		}
 
-		for(File library : compileCommand.getLibraries()) {
+		for(Library library : compileCommand.getLibraries()) {
 			arguments.add("-X");
-			arguments.add("-l" + library.getAbsolutePath());
-			
+			arguments.add(library.getBinary().getAbsolutePath());
 		}
-		
+
 		if(compileCommand.isDebug()) {
 			arguments.add("-g");
 			arguments.add("--save-temps");
@@ -68,6 +75,10 @@ public class CommandLineExecutor implements CommandExecutor {
 
 		for(File source : compileCommand.getValaSources()) {
 			arguments.add(source.getAbsolutePath());
+		}
+
+		for(Library library : compileCommand.getLibraries()) {
+			arguments.add(library.getVapi().getAbsolutePath());
 		}
 
 		cmd.addArguments(arguments.toArray(new String[arguments.size()]));
