@@ -68,6 +68,11 @@ public abstract class CompileMojo extends AbstractMojo {
 	 * @parameter default-value="false";
 	 */
 	private boolean debug = false;
+	
+	/**
+	 * @parameter expression="${user.home}"
+	 */
+	private String userHome;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		validate();
@@ -88,7 +93,15 @@ public abstract class CompileMojo extends AbstractMojo {
 
     	if(project.getDependencyArtifacts() != null) {
 	    	for(Artifact artifact : project.getDependencyArtifacts()) {
-	    		command.getPackages().add(artifact.getArtifactId() + "-" + artifact.getVersion());
+	    		if("package".equals(artifact.getType())) {
+	    			command.getPackages().add(artifact.getArtifactId() + "-" + artifact.getVersion());
+	    		} else if("vala-library".equals(artifact.getType())) {
+	    			String groupDirectory = "";
+	    			for(String label : artifact.getGroupId().split("\\.")) {
+	    				groupDirectory += label + "/";
+	    			}
+	    			command.getLibraries().add(new File(userHome+"/.m2/repository/" + groupDirectory + artifact.getArtifactId() + "/" + artifact.getVersion() + "/" + artifact.getArtifactId() + "-" + artifact.getVersion() + ".so"));
+	    		}
 	    	}
     	}
 

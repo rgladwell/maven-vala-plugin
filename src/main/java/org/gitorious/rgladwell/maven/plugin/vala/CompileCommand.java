@@ -13,6 +13,7 @@ public class CompileCommand extends Command {
 	File outputFolder;
 	boolean library;
 	boolean debug;
+	Set<File> libraries = new HashSet<File>();
 
 	public String getCommandName() {
 		return commandName;
@@ -70,12 +71,21 @@ public class CompileCommand extends Command {
     	this.debug = debug;
     }
 
+	public Set<File> getLibraries() {
+    	return libraries;
+    }
+
+	public void setLibraries(Set<File> libraries) {
+    	this.libraries = libraries;
+    }
+
 	@Override
     public String toString() {
 	    return "CompileCommand [commandName=" + commandName + ", buildName="
 	            + buildName + ", valaSources=" + valaSources + ", packages="
 	            + packages + ", outputFolder=" + outputFolder + ", library="
-	            + library + ", debug=" + debug + "]";
+	            + library + ", debug=" + debug + ", libraries=" + libraries
+	            + "]";
     }
 
 	@Override
@@ -87,6 +97,8 @@ public class CompileCommand extends Command {
 	    result = prime * result
 	            + ((commandName == null) ? 0 : commandName.hashCode());
 	    result = prime * result + (debug ? 1231 : 1237);
+	    result = prime * result
+	            + ((libraries == null) ? 0 : libraries.hashCode());
 	    result = prime * result + (library ? 1231 : 1237);
 	    result = prime * result
 	            + ((outputFolder == null) ? 0 : outputFolder.hashCode());
@@ -117,6 +129,11 @@ public class CompileCommand extends Command {
 	    } else if (!commandName.equals(other.commandName))
 		    return false;
 	    if (debug != other.debug)
+		    return false;
+	    if (libraries == null) {
+		    if (other.libraries != null)
+			    return false;
+	    } else if (!libraries.equals(other.libraries))
 		    return false;
 	    if (library != other.library)
 		    return false;

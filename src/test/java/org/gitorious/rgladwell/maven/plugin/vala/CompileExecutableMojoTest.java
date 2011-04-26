@@ -37,9 +37,10 @@ public class CompileExecutableMojoTest extends AbstractMojoTestCase {
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
 		setVariableValueToObject(mojo, "compilerName", "valac");
 		MavenProjectStub project = new MavenProjectStub();
-		Artifact artifact = new ArtifactStub();
+		ArtifactStub artifact = new ArtifactStub();
 		artifact.setArtifactId("glib");
 		artifact.setVersion("2.0");
+		artifact.setType("package");
 		project.setDependencyArtifacts(new HashSet<Artifact>());
 		project.getDependencyArtifacts().add(artifact);
 		setVariableValueToObject(mojo, "project", project);
@@ -64,16 +65,25 @@ public class CompileExecutableMojoTest extends AbstractMojoTestCase {
 		CompileExecutableMojo mojo = (CompileExecutableMojo) lookupMojo ( "valac-executable", pom );
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
 		setVariableValueToObject(mojo, "compilerName", "valac");
+		setVariableValueToObject(mojo, "userHome", "/home/test");
 		MavenProjectStub project = new MavenProjectStub();
-		Artifact artifact = new ArtifactStub();
+		ArtifactStub artifact = new ArtifactStub();
 		artifact.setArtifactId("glib");
 		artifact.setVersion("2.0");
-		Artifact artifact2 = new ArtifactStub();
+		artifact.setType("package");
+		ArtifactStub artifact2 = new ArtifactStub();
 		artifact2.setArtifactId("gio");
 		artifact2.setVersion("2.0");
+		artifact2.setType("package");
+		ArtifactStub artifact3 = new ArtifactStub();
+		artifact3.setGroupId("org.gitorious.rgladwell");
+		artifact3.setArtifactId("vala-plugin");
+		artifact3.setVersion("3.0-SNAPSHOT");
+		artifact3.setType("vala-library");
 		project.setDependencyArtifacts(new HashSet<Artifact>());
 		project.getDependencyArtifacts().add(artifact);
 		project.getDependencyArtifacts().add(artifact2);
+		project.getDependencyArtifacts().add(artifact3);
 		setVariableValueToObject(mojo, "project", project);
 		setVariableValueToObject(mojo, "outputExecutableName", "complex-executable");
 		setVariableValueToObject(mojo, "projectHelper", projectHelper);
@@ -87,13 +97,13 @@ public class CompileExecutableMojoTest extends AbstractMojoTestCase {
 		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/complex-executable/main.vala"));
 		command.getPackages().add("glib-2.0");
 		command.getPackages().add("gio-2.0");
+		command.getLibraries().add(new File("/home/test/.m2/repository/org/gitorious/rgladwell/vala-plugin/3.0-SNAPSHOT/vala-plugin-3.0-SNAPSHOT.so"));
 		command.setOutputFolder(new File(getBasedir(), "src/test/resources/projects/complex-executable/target"));
 		verify(commandExecutor).execute(command);
 		verify(projectHelper).attachArtifact(project, "exe", new File(command.getOutputFolder(), "complex-executable"));
 	}
 
     @Test
-	@SuppressWarnings("unchecked")
 	public void testExecuteForSimpleExecutableWithDebug() throws Throwable {
 		File pom = new File(getBasedir(), "src/test/resources/projects/simple-executable/pom.xml");
 		CompileExecutableMojo mojo = (CompileExecutableMojo) lookupMojo ( "valac-executable", pom );

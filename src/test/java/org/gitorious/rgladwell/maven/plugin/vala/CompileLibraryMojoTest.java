@@ -37,9 +37,10 @@ public class CompileLibraryMojoTest extends AbstractMojoTestCase {
 		setVariableValueToObject(mojo, "compilerName", "valac");
 		MavenProjectStub project = new MavenProjectStub();
 		project.setPackaging("vala-library");
-		Artifact artifact = new ArtifactStub();
+		ArtifactStub artifact = new ArtifactStub();
 		artifact.setArtifactId("glib");
 		artifact.setVersion("2.0");
+		artifact.setType("package");
 		project.setDependencyArtifacts(new HashSet<Artifact>());
 		project.getDependencyArtifacts().add(artifact);
 		setVariableValueToObject(mojo, "project", project);
