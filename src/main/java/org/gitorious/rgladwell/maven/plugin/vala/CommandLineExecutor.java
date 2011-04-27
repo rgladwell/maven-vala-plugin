@@ -54,9 +54,10 @@ public class CommandLineExecutor implements CommandExecutor {
 		} else {
 			arguments.add("-o");
 			arguments.add(compileCommand.getOutputFolder().getAbsolutePath()+"/"+compileCommand.getBuildName());
-			arguments.add("-X");
-			arguments.add("-I" + compileCommand.getOutputFolder());
 		}
+
+		arguments.add("-X");
+		arguments.add("-I" + compileCommand.getOutputFolder().getAbsolutePath());
 
 		for(String p : compileCommand.getPackages()) {
 			arguments.add("--pkg");
@@ -80,7 +81,7 @@ public class CommandLineExecutor implements CommandExecutor {
 		for(Library library : compileCommand.getLibraries()) {
 			arguments.add(library.getVapi().getAbsolutePath());
 		}
-
+		
 		cmd.addArguments(arguments.toArray(new String[arguments.size()]));
 
 		StringWriter outputWriter = new StringWriter();
