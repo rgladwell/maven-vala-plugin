@@ -31,6 +31,20 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+			<role-hint>vapi</role-hint>
+			<implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
+			<configuration>
+				<phases>
+					<process-resources>
+						org.apache.maven.plugins:maven-resources-plugin:resources,
+						org.codehaus.mojo:vala-maven-plugin:prepare-vapi-resources
+					</process-resources>
+					<install>org.apache.maven.plugins:maven-install-plugin:install</install>
+				</phases>
+			</configuration>
+		</component>
+		<component>
 			<role>org.gitorious.rgladwell.maven.plugin.vala.CommandExecutor</role>
 			<implementation>org.gitorious.rgladwell.maven.plugin.vala.CommandLineExecutor</implementation>
 		</component>

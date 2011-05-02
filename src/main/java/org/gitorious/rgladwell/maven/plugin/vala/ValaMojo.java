@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectHelper;
 
 public abstract class ValaMojo extends AbstractMojo {
 
@@ -28,4 +29,17 @@ public abstract class ValaMojo extends AbstractMojo {
 	 */
 	protected String userHome;
 
+    /**
+     * Location of the source directory for vala source files.
+     * 
+     * @parameter expression="${project.build.directory}/vala"
+     * @required
+     */
+	protected File sourceDirectory;
+    
+    /**
+     * @component
+  	 */
+	protected MavenProjectHelper projectHelper;
+ 
 }

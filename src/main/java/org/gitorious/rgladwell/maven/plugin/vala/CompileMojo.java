@@ -13,14 +13,6 @@ import org.gitorious.rgladwell.maven.plugin.vala.model.Library;
 public abstract class CompileMojo extends ValaMojo {
 
     /**
-     * Location of the source directory for vala source files.
-     * 
-     * @parameter expression="${project.build.directory}/vala"
-     * @required
-     */
-	protected File sourceDirectory;
-
-    /**
      * Name of the executable output binary.
      * 
      * @parameter expression="${project.artifactId}-${project.version}"
@@ -40,12 +32,7 @@ public abstract class CompileMojo extends ValaMojo {
      * @component role="org.gitorious.rgladwell.maven.plugin.vala.CommandExecutor"
      */
 	private CommandExecutor commandExecutor;
-    
-    /**
-     * @component
-  	 */
-	protected MavenProjectHelper projectHelper;
- 
+
 	protected CompileCommand command = new CompileCommand();
 
 	/**
