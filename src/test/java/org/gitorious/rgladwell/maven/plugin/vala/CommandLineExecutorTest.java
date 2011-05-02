@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.StringWriter;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
@@ -24,12 +25,9 @@ public class CommandLineExecutorTest extends AbstractMojoTestCase {
 	@Before
 	public void setUp() {
 		executor = new CommandLineExecutor();
-		
-		outputDirectory = new File(getBasedir(), "target/vala-maven-plugin/unit-tests/tmp");
 
-		if(!outputDirectory .exists()) {
-    		outputDirectory.mkdirs();
-    	}
+		outputDirectory = new File(getBasedir(), "target/vala-maven-plugin/unit-tests/tmp");
+   		outputDirectory.mkdirs();
 	}
 
     @After
@@ -181,6 +179,23 @@ public class CommandLineExecutorTest extends AbstractMojoTestCase {
 		StreamConsumer error = new WriterStreamConsumer(errorWriter);
 		assertEquals("simple executable not built correctly", 0, CommandLineUtils.executeCommandLine(cmd, output, error));
 		assertTrue(outputWriter.toString().contains("TEST-simple-library"));
+	}
+
+	@Test
+	public void testExecuteCompileForLibraryWithIntrospection() throws Exception {
+		CompileCommand command = new CompileCommand();
+		command.setCommandName("valac");
+		command.getValaSources().add(new File(getBasedir(), "src/test/resources/projects/simple-library/main.vala"));
+		command.getPackages().add("glib-2.0");
+		command.setLibrary(true);
+		command.setIntrospectionMetadata(true);
+		command.setOutputFolder(outputDirectory);
+		command.setBuildName("simple-library-1.0-SNAPSHOT");
+
+		executor.execute(command);
+
+		File gir = new File(outputDirectory, "simple-library-1.0-SNAPSHOT.gir");
+		assertTrue("simple executable vapi not built correctly", gir.exists());
 	}
 
 }

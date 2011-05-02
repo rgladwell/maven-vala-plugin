@@ -1,12 +1,14 @@
 package org.gitorious.rgladwell.maven.plugin.vala;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
@@ -74,6 +76,14 @@ public class CommandLineExecutor implements CommandExecutor {
 			arguments.add("--save-temps");
 		}
 
+		if(compileCommand.isIntrospectionMetadata()) {
+			String buildName = compileCommand.getBuildName();
+			if(buildName.endsWith("-SNAPSHOT")) {
+				buildName = buildName.replaceFirst("-SNAPSHOT", "");
+			}
+			arguments.add("--gir="+buildName+".gir");
+		}
+
 		for(File source : compileCommand.getValaSources()) {
 			arguments.add(source.getAbsolutePath());
 		}
@@ -102,6 +112,18 @@ public class CommandLineExecutor implements CommandExecutor {
 	        throw new ValaPluginException("error executing " + command, e);
         } catch (InterruptedException e) {
 	        throw new ValaPluginException("error executing " + command, e);
+        }
+
+        if(compileCommand.isIntrospectionMetadata() && compileCommand.getBuildName().endsWith("-SNAPSHOT")) {
+			String buildName = compileCommand.getBuildName().replaceFirst("-SNAPSHOT", "");
+
+        	try {
+        		File to = new File(compileCommand.getOutputFolder().getAbsolutePath()+"/"+buildName+".gir");
+        		File from = new File(compileCommand.getOutputFolder().getAbsolutePath()+"/"+compileCommand.getBuildName()+".gir");
+	            FileUtils.copyFile(to, from);
+            } catch (IOException e) {
+	            throw new ValaPluginException(e);
+            }
         }
 	}
 

@@ -15,6 +15,7 @@ public class CompileCommand extends Command {
 	boolean library;
 	boolean debug;
 	Set<Library> libraries = new HashSet<Library>();
+	boolean introspectionMetadata;
 
 	public String getCommandName() {
 		return commandName;
@@ -80,13 +81,21 @@ public class CompileCommand extends Command {
     	this.libraries = libraries;
     }
 
+	public boolean isIntrospectionMetadata() {
+    	return introspectionMetadata;
+    }
+
+	public void setIntrospectionMetadata(boolean introspectionMetadata) {
+    	this.introspectionMetadata = introspectionMetadata;
+    }
+
 	@Override
     public String toString() {
 	    return "CompileCommand [commandName=" + commandName + ", buildName="
 	            + buildName + ", valaSources=" + valaSources + ", packages="
 	            + packages + ", outputFolder=" + outputFolder + ", library="
 	            + library + ", debug=" + debug + ", libraries=" + libraries
-	            + "]";
+	            + ", introspectionMetadata=" + introspectionMetadata + "]";
     }
 
 	@Override
@@ -98,6 +107,7 @@ public class CompileCommand extends Command {
 	    result = prime * result
 	            + ((commandName == null) ? 0 : commandName.hashCode());
 	    result = prime * result + (debug ? 1231 : 1237);
+	    result = prime * result + (introspectionMetadata ? 1231 : 1237);
 	    result = prime * result
 	            + ((libraries == null) ? 0 : libraries.hashCode());
 	    result = prime * result + (library ? 1231 : 1237);
@@ -130,6 +140,8 @@ public class CompileCommand extends Command {
 	    } else if (!commandName.equals(other.commandName))
 		    return false;
 	    if (debug != other.debug)
+		    return false;
+	    if (introspectionMetadata != other.introspectionMetadata)
 		    return false;
 	    if (libraries == null) {
 		    if (other.libraries != null)
