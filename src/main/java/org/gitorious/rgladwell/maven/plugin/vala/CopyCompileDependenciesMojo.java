@@ -12,6 +12,7 @@ import org.codehaus.plexus.util.FileUtils;
  * Copy required resources to build folder for compilation
  *
  * @goal copy-compile-dependencies
+ * @requiresDependencyCollection compile
  */
 public class CopyCompileDependenciesMojo extends ValaMojo {
 
@@ -33,7 +34,15 @@ public class CopyCompileDependenciesMojo extends ValaMojo {
                 } catch (IOException e) {
 	                throw new MojoFailureException("error copying header files to build directory", e);
                 }
-			}
+			} else if("vapi".equals(artifact.getType())) {
+    			File vapiDep = new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".vapi");
+    			File destination = new File(vapiDirectory, artifact.getArtifactId() + ".vapi");
+				try {
+                    FileUtils.copyFile(vapiDep, destination);
+                } catch (IOException e) {
+                    throw new MojoFailureException("error copying vapi depenndencies", e);
+                }
+    		}
 		}
 
 	}

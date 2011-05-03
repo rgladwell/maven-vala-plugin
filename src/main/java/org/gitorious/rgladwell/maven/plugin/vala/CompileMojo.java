@@ -5,7 +5,6 @@ import java.io.File;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProjectHelper;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.gitorious.rgladwell.maven.plugin.vala.model.CompileCommand;
 import org.gitorious.rgladwell.maven.plugin.vala.model.Library;
@@ -56,8 +55,8 @@ public abstract class CompileMojo extends ValaMojo {
     	for(String file : scanner.getIncludedFiles()) {
     		command.getValaSources().add(new File(sourceDirectory, file));
     	}
-
-    	if(project.getDependencyArtifacts() != null) {
+    	
+    	if(project.getDependencyArtifacts() != null) {    		
 	    	for(Artifact artifact : project.getDependencyArtifacts()) {
 	    		if("package".equals(artifact.getType())) {
 	    			command.getPackages().add(artifact.getArtifactId() + "-" + artifact.getVersion());
@@ -72,15 +71,10 @@ public abstract class CompileMojo extends ValaMojo {
 	    			library.setVapi(new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".vapi"));
 	    			command.getLibraries().add(library);
 	    		} else if("vapi".equals(artifact.getType())) {
-	    			String groupDirectory = "";
-	    			for(String label : artifact.getGroupId().split("\\.")) {
-	    				groupDirectory += label + "/";
-	    			}
-	    			String basefolder = userHome+"/.m2/repository/" + groupDirectory + artifact.getArtifactId() + "/" + artifact.getVersion() + "/";
-	    			File vapiDep = new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".vapi");
-	    			command.getValaSources().add(vapiDep);
+	    			command.setVapiDirectory(vapiDirectory);
 	    		}
 	    	}
+
     	}
 
     	command.setOutputFolder(outputDirectory);

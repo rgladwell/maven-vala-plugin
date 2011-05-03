@@ -16,6 +16,7 @@ public class CompileCommand extends Command {
 	boolean debug;
 	Set<Library> libraries = new HashSet<Library>();
 	boolean introspectionMetadata;
+	File vapiDirectory;
 
 	public String getCommandName() {
 		return commandName;
@@ -89,34 +90,35 @@ public class CompileCommand extends Command {
     	this.introspectionMetadata = introspectionMetadata;
     }
 
+	public File getVapiDirectory() {
+    	return vapiDirectory;
+    }
+
+	public void setVapiDirectory(File vapiDirectory) {
+    	this.vapiDirectory = vapiDirectory;
+    }
+
 	@Override
     public String toString() {
-	    return "CompileCommand [commandName=" + commandName + ", buildName="
-	            + buildName + ", valaSources=" + valaSources + ", packages="
-	            + packages + ", outputFolder=" + outputFolder + ", library="
-	            + library + ", debug=" + debug + ", libraries=" + libraries
-	            + ", introspectionMetadata=" + introspectionMetadata + "]";
+	    return "CompileCommand [commandName=" + commandName + ", buildName=" + buildName + ", valaSources=" + valaSources + ", packages=" + packages + ", outputFolder="
+	            + outputFolder + ", library=" + library + ", debug=" + debug + ", libraries=" + libraries + ", introspectionMetadata=" + introspectionMetadata + ", vapiDirectory="
+	            + vapiDirectory + "]";
     }
 
 	@Override
     public int hashCode() {
 	    final int prime = 31;
 	    int result = 1;
-	    result = prime * result
-	            + ((buildName == null) ? 0 : buildName.hashCode());
-	    result = prime * result
-	            + ((commandName == null) ? 0 : commandName.hashCode());
+	    result = prime * result + ((buildName == null) ? 0 : buildName.hashCode());
+	    result = prime * result + ((commandName == null) ? 0 : commandName.hashCode());
 	    result = prime * result + (debug ? 1231 : 1237);
 	    result = prime * result + (introspectionMetadata ? 1231 : 1237);
-	    result = prime * result
-	            + ((libraries == null) ? 0 : libraries.hashCode());
+	    result = prime * result + ((libraries == null) ? 0 : libraries.hashCode());
 	    result = prime * result + (library ? 1231 : 1237);
-	    result = prime * result
-	            + ((outputFolder == null) ? 0 : outputFolder.hashCode());
-	    result = prime * result
-	            + ((packages == null) ? 0 : packages.hashCode());
-	    result = prime * result
-	            + ((valaSources == null) ? 0 : valaSources.hashCode());
+	    result = prime * result + ((outputFolder == null) ? 0 : outputFolder.hashCode());
+	    result = prime * result + ((packages == null) ? 0 : packages.hashCode());
+	    result = prime * result + ((valaSources == null) ? 0 : valaSources.hashCode());
+	    result = prime * result + ((vapiDirectory == null) ? 0 : vapiDirectory.hashCode());
 	    return result;
     }
 
@@ -164,6 +166,11 @@ public class CompileCommand extends Command {
 		    if (other.valaSources != null)
 			    return false;
 	    } else if (!valaSources.equals(other.valaSources))
+		    return false;
+	    if (vapiDirectory == null) {
+		    if (other.vapiDirectory != null)
+			    return false;
+	    } else if (!vapiDirectory.equals(other.vapiDirectory))
 		    return false;
 	    return true;
     }

@@ -84,6 +84,10 @@ public class CommandLineExecutor implements CommandExecutor {
 			arguments.add("--gir="+buildName+".gir");
 		}
 
+		if(compileCommand.getVapiDirectory() != null) {
+			arguments.add("--vapidir="+compileCommand.getVapiDirectory().getAbsolutePath());			
+		}
+
 		for(File source : compileCommand.getValaSources()) {
 			arguments.add(source.getAbsolutePath());
 		}

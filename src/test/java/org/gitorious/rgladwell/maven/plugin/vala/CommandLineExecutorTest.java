@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.StringWriter;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;

@@ -23,7 +23,15 @@ public abstract class ValaMojo extends AbstractMojo {
      * @required
      */
 	protected File outputDirectory;
-	
+
+	/**
+     * Location of the output directory for vala compiled binaries.
+     * 
+     * @parameter expression="${project.build.directory}/vala/vapi"
+     * @required
+     */
+	protected File vapiDirectory;
+
 	/**
 	 * @parameter expression="${user.home}"
 	 */

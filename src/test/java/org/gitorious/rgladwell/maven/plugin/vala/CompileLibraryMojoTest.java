@@ -1,14 +1,16 @@
 package org.gitorious.rgladwell.maven.plugin.vala;
 
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.apache.maven.plugin.testing.stubs.ArtifactStub;
-import org.apache.maven.plugin.testing.stubs.MavenProjectStub;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.gitorious.rgladwell.maven.plugin.vala.model.CompileCommand;
 import org.junit.Before;
@@ -23,6 +25,7 @@ public class CompileLibraryMojoTest extends AbstractMojoTestCase {
 	CompileLibraryMojo mojo;
 	@Mock CommandExecutor commandExecutor;
 	@Mock MavenProjectHelper projectHelper;
+	@Mock MavenProject project;
 
 	@Before
 	public void setUp() throws Exception {
@@ -30,20 +33,20 @@ public class CompileLibraryMojoTest extends AbstractMojoTestCase {
 	}
 
     @Test
-	@SuppressWarnings("unchecked")
 	public void testExecuteForSimpleLibrary() throws Throwable {
 		File pom = new File(getBasedir(), "src/test/resources/projects/simple-library/pom.xml");
 		CompileLibraryMojo mojo = (CompileLibraryMojo) lookupMojo ( "valac-library", pom );
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
 		setVariableValueToObject(mojo, "compilerName", "valac");
-		MavenProjectStub project = new MavenProjectStub();
+		when(project.getPackaging()).thenReturn("vala-library");
 		project.setPackaging("vala-library");
 		ArtifactStub artifact = new ArtifactStub();
 		artifact.setArtifactId("glib");
 		artifact.setVersion("2.0");
 		artifact.setType("package");
-		project.setDependencyArtifacts(new HashSet<Artifact>());
-		project.getDependencyArtifacts().add(artifact);
+		Set<Artifact> artifacts = new HashSet<Artifact>();
+		artifacts.add(artifact);
+		when(project.getDependencyArtifacts()).thenReturn(artifacts);
 		setVariableValueToObject(mojo, "project", project);
 		setVariableValueToObject(mojo, "outputExecutableName", "simple-library");
 		setVariableValueToObject(mojo, "projectHelper", projectHelper);
@@ -65,20 +68,19 @@ public class CompileLibraryMojoTest extends AbstractMojoTestCase {
 	}
 
     @Test
-	@SuppressWarnings("unchecked")
 	public void testExecuteForSimpleLibraryWithIntrospection() throws Throwable {
 		File pom = new File(getBasedir(), "src/test/resources/projects/simple-library/pom.xml");
 		CompileLibraryMojo mojo = (CompileLibraryMojo) lookupMojo ( "valac-library", pom );
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
 		setVariableValueToObject(mojo, "compilerName", "valac");
-		MavenProjectStub project = new MavenProjectStub();
-		project.setPackaging("vala-library");
+		when(project.getPackaging()).thenReturn("vala-library");
 		ArtifactStub artifact = new ArtifactStub();
 		artifact.setArtifactId("glib");
 		artifact.setVersion("2.0");
 		artifact.setType("package");
-		project.setDependencyArtifacts(new HashSet<Artifact>());
-		project.getDependencyArtifacts().add(artifact);
+		Set<Artifact> artifacts = new HashSet<Artifact>();
+		artifacts.add(artifact);
+		when(project.getDependencyArtifacts()).thenReturn(artifacts);
 		setVariableValueToObject(mojo, "project", project);
 		setVariableValueToObject(mojo, "outputExecutableName", "simple-library");
 		setVariableValueToObject(mojo, "projectHelper", projectHelper);
