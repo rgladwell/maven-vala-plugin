@@ -71,6 +71,14 @@ public abstract class CompileMojo extends ValaMojo {
 	    			library.setBinary(new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".so"));
 	    			library.setVapi(new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".vapi"));
 	    			command.getLibraries().add(library);
+	    		} else if("vapi".equals(artifact.getType())) {
+	    			String groupDirectory = "";
+	    			for(String label : artifact.getGroupId().split("\\.")) {
+	    				groupDirectory += label + "/";
+	    			}
+	    			String basefolder = userHome+"/.m2/repository/" + groupDirectory + artifact.getArtifactId() + "/" + artifact.getVersion() + "/";
+	    			File vapiDep = new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".vapi");
+	    			command.getValaSources().add(vapiDep);
 	    		}
 	    	}
     	}
