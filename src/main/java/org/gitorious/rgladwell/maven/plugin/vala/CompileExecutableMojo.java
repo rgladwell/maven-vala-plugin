@@ -25,7 +25,6 @@ import java.io.File;
  * Goal which compiles a Vala executable
  *
  * @goal valac-executable
- * @requiresDependencyCollection compile
  */
 public class CompileExecutableMojo extends CompileMojo {
 

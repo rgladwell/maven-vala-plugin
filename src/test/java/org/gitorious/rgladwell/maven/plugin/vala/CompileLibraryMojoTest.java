@@ -7,9 +7,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
-import org.apache.maven.plugin.testing.stubs.ArtifactStub;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.gitorious.rgladwell.maven.plugin.vala.model.CompileCommand;
@@ -18,6 +16,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompileLibraryMojoTest extends AbstractMojoTestCase {
@@ -26,6 +26,7 @@ public class CompileLibraryMojoTest extends AbstractMojoTestCase {
 	@Mock CommandExecutor commandExecutor;
 	@Mock MavenProjectHelper projectHelper;
 	@Mock MavenProject project;
+	@Mock ProjectDependencyService projectDependencyService;
 
 	@Before
 	public void setUp() throws Exception {
@@ -37,16 +38,13 @@ public class CompileLibraryMojoTest extends AbstractMojoTestCase {
 		File pom = new File(getBasedir(), "src/test/resources/projects/simple-library/pom.xml");
 		CompileLibraryMojo mojo = (CompileLibraryMojo) lookupMojo ( "valac-library", pom );
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
+		setVariableValueToObject(mojo, "projectDependencyService", projectDependencyService);
 		setVariableValueToObject(mojo, "compilerName", "valac");
 		when(project.getPackaging()).thenReturn("vala-library");
-		project.setPackaging("vala-library");
-		ArtifactStub artifact = new ArtifactStub();
-		artifact.setArtifactId("glib");
-		artifact.setVersion("2.0");
-		artifact.setType("package");
+		Artifact artifact = new DefaultArtifact("org.gnome:glib:package:2.0");
 		Set<Artifact> artifacts = new HashSet<Artifact>();
 		artifacts.add(artifact);
-		when(project.getDependencyArtifacts()).thenReturn(artifacts);
+		when(projectDependencyService.collectArtifacts()).thenReturn(artifacts);
 		setVariableValueToObject(mojo, "project", project);
 		setVariableValueToObject(mojo, "outputExecutableName", "simple-library");
 		setVariableValueToObject(mojo, "projectHelper", projectHelper);
@@ -72,15 +70,13 @@ public class CompileLibraryMojoTest extends AbstractMojoTestCase {
 		File pom = new File(getBasedir(), "src/test/resources/projects/simple-library/pom.xml");
 		CompileLibraryMojo mojo = (CompileLibraryMojo) lookupMojo ( "valac-library", pom );
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
+		setVariableValueToObject(mojo, "projectDependencyService", projectDependencyService);
 		setVariableValueToObject(mojo, "compilerName", "valac");
 		when(project.getPackaging()).thenReturn("vala-library");
-		ArtifactStub artifact = new ArtifactStub();
-		artifact.setArtifactId("glib");
-		artifact.setVersion("2.0");
-		artifact.setType("package");
+		Artifact artifact = new DefaultArtifact("org.gnome:glib:package:2.0");
 		Set<Artifact> artifacts = new HashSet<Artifact>();
 		artifacts.add(artifact);
-		when(project.getDependencyArtifacts()).thenReturn(artifacts);
+		when(projectDependencyService.collectArtifacts()).thenReturn(artifacts);
 		setVariableValueToObject(mojo, "project", project);
 		setVariableValueToObject(mojo, "outputExecutableName", "simple-library");
 		setVariableValueToObject(mojo, "projectHelper", projectHelper);

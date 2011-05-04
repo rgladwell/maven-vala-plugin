@@ -2,13 +2,18 @@ package org.gitorious.rgladwell.maven.plugin.vala;
 
 import java.io.File;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.gitorious.rgladwell.maven.plugin.vala.model.CompileCommand;
 import org.gitorious.rgladwell.maven.plugin.vala.model.Library;
+import org.sonatype.aether.artifact.Artifact;
 
+/**
+ * Abstract mojo specifying common compilation functionality
+ *
+ * @requiresDependencyCollection compile
+ */
 public abstract class CompileMojo extends ValaMojo {
 
     /**
@@ -41,7 +46,7 @@ public abstract class CompileMojo extends ValaMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		validate();
-
+		
     	command.setBuildName(outputExecutableName);
 
     	command.setCommandName(compilerName);
@@ -55,25 +60,30 @@ public abstract class CompileMojo extends ValaMojo {
     	for(String file : scanner.getIncludedFiles()) {
     		command.getValaSources().add(new File(sourceDirectory, file));
     	}
+
+    	projectDependencyService.setProject(project);
+    	projectDependencyService.setRemoteRepos(remoteRepos);
+    	projectDependencyService.setRepoSession(repoSession);
+    	projectDependencyService.setRepoSystem(repoSystem);
     	
-    	if(project.getDependencyArtifacts() != null) {    		
-	    	for(Artifact artifact : project.getDependencyArtifacts()) {
-	    		if("package".equals(artifact.getType())) {
-	    			command.getPackages().add(artifact.getArtifactId() + "-" + artifact.getVersion());
-	    		} else if("vala-library".equals(artifact.getType())) {
-	    			String groupDirectory = "";
-	    			for(String label : artifact.getGroupId().split("\\.")) {
-	    				groupDirectory += label + "/";
-	    			}
-	    			Library library = new Library();
-	    			String basefolder = userHome+"/.m2/repository/" + groupDirectory + artifact.getArtifactId() + "/" + artifact.getVersion() + "/";
-	    			library.setBinary(new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".so"));
-	    			library.setVapi(new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".vapi"));
-	    			command.getLibraries().add(library);
-	    		} else if("vapi".equals(artifact.getType())) {
-	    			command.setVapiDirectory(vapiDirectory);
-	    		}
-	    	}
+		for(Artifact artifact : projectDependencyService.collectArtifacts()) {
+			getLog().debug("found depedent artifact=["+artifact+"]");
+
+			if("package".equals(artifact.getExtension())) {
+    			command.getPackages().add(artifact.getArtifactId() + "-" + artifact.getVersion());
+    		} else if("vala-library".equals(artifact.getExtension())) {
+    			String groupDirectory = "";
+    			for(String label : artifact.getGroupId().split("\\.")) {
+    				groupDirectory += label + "/";
+    			}
+    			Library library = new Library();
+    			String basefolder = userHome+"/.m2/repository/" + groupDirectory + artifact.getArtifactId() + "/" + artifact.getVersion() + "/";
+    			library.setBinary(new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".so"));
+    			library.setVapi(new File(basefolder + artifact.getArtifactId() + "-" + artifact.getVersion() + ".vapi"));
+    			command.getLibraries().add(library);
+    		} else if("vapi".equals(artifact.getExtension())) {
+    			command.setVapiDirectory(vapiDirectory);
+    		}
 
     	}
 

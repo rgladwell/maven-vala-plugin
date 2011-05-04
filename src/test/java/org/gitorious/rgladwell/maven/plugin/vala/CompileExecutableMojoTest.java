@@ -6,9 +6,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
-import org.apache.maven.plugin.testing.stubs.ArtifactStub;
 import org.apache.maven.plugin.testing.stubs.MavenProjectStub;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
@@ -19,6 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompileExecutableMojoTest extends AbstractMojoTestCase {
@@ -27,6 +27,7 @@ public class CompileExecutableMojoTest extends AbstractMojoTestCase {
 	@Mock CommandExecutor commandExecutor;
 	@Mock MavenProjectHelper projectHelper;
 	@Mock private MavenProject project;
+	@Mock ProjectDependencyService projectDependencyService;
 
 	@Before
 	public void setUp() throws Exception {
@@ -40,13 +41,11 @@ public class CompileExecutableMojoTest extends AbstractMojoTestCase {
 		CompileExecutableMojo mojo = (CompileExecutableMojo) lookupMojo ( "valac-executable", pom );
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
 		setVariableValueToObject(mojo, "compilerName", "valac");
-		ArtifactStub artifact = new ArtifactStub();
-		artifact.setArtifactId("glib");
-		artifact.setVersion("2.0");
-		artifact.setType("package");
+		setVariableValueToObject(mojo, "projectDependencyService", projectDependencyService);
+		Artifact artifact = new DefaultArtifact("org.gnome:glib:package:2.0");
 		Set<Artifact> artifacts = new HashSet<Artifact>();
 		artifacts.add(artifact);
-		when(project.getDependencyArtifacts()).thenReturn(artifacts);
+		when(projectDependencyService.collectArtifacts()).thenReturn(artifacts);
 		setVariableValueToObject(mojo, "project", project);
 		setVariableValueToObject(mojo, "outputExecutableName", "simple-executable");
 		setVariableValueToObject(mojo, "projectHelper", projectHelper);
@@ -69,24 +68,16 @@ public class CompileExecutableMojoTest extends AbstractMojoTestCase {
 		setVariableValueToObject(mojo, "commandExecutor", commandExecutor);
 		setVariableValueToObject(mojo, "compilerName", "valac");
 		setVariableValueToObject(mojo, "userHome", "/home/test");
-		ArtifactStub artifact = new ArtifactStub();
-		artifact.setArtifactId("glib");
-		artifact.setVersion("2.0");
-		artifact.setType("package");
-		ArtifactStub artifact2 = new ArtifactStub();
-		artifact2.setArtifactId("gio");
-		artifact2.setVersion("2.0");
-		artifact2.setType("package");
-		ArtifactStub artifact3 = new ArtifactStub();
-		artifact3.setGroupId("org.gitorious.rgladwell");
-		artifact3.setArtifactId("vala-plugin");
-		artifact3.setVersion("3.0-SNAPSHOT");
-		artifact3.setType("vala-library");
+		setVariableValueToObject(mojo, "projectDependencyService", projectDependencyService);
 		Set<Artifact> artifacts = new HashSet<Artifact>();
+		setVariableValueToObject(mojo, "projectDependencyService", projectDependencyService);
+		Artifact artifact = new DefaultArtifact("org.gnome:glib:package:2.0");
+		Artifact artifact2 = new DefaultArtifact("org.gnome:gio:package:2.0");
+		Artifact artifact3 = new DefaultArtifact("org.gitorious.rgladwell:vala-plugin:vala-library:3.0-SNAPSHOT");
 		artifacts.add(artifact);
 		artifacts.add(artifact2);
 		artifacts.add(artifact3);
-		when(project.getDependencyArtifacts()).thenReturn(artifacts);
+		when(projectDependencyService.collectArtifacts()).thenReturn(artifacts);
 		setVariableValueToObject(mojo, "project", project);
 		setVariableValueToObject(mojo, "outputExecutableName", "complex-executable");
 		setVariableValueToObject(mojo, "projectHelper", projectHelper);
@@ -120,6 +111,7 @@ public class CompileExecutableMojoTest extends AbstractMojoTestCase {
 		setVariableValueToObject(mojo, "outputExecutableName", "simple-executable");
 		setVariableValueToObject(mojo, "projectHelper", projectHelper);
 		setVariableValueToObject(mojo, "debug", true);
+		setVariableValueToObject(mojo, "projectDependencyService", projectDependencyService);
 
 		mojo.execute();
 

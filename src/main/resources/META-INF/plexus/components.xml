@@ -48,5 +48,9 @@
 			<role>org.gitorious.rgladwell.maven.plugin.vala.CommandExecutor</role>
 			<implementation>org.gitorious.rgladwell.maven.plugin.vala.CommandLineExecutor</implementation>
 		</component>
+		<component>
+			<role>org.gitorious.rgladwell.maven.plugin.vala.ProjectDependencyService</role>
+			<implementation>org.gitorious.rgladwell.maven.plugin.vala.AetherProjectDependencyService</implementation>
+		</component>
 	</components>
 </component-set>

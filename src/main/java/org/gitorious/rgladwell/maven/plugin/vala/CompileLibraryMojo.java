@@ -9,7 +9,6 @@ import org.apache.maven.plugin.MojoFailureException;
  * Goal which compiles a Vala shared library.
  *
  * @goal valac-library
- * @requiresDependencyCollection compile
  */
 public class CompileLibraryMojo extends CompileMojo {
 
